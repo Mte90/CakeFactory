@@ -1,0 +1,28 @@
+Cake Factory - clone di Super Mario bros
+Remake del gioco 1999 http://www.youtube.com/watch?v=m1ScrMtw2As
+Gioco originale del 1983 http://www.youtube.com/watch?v=8UzYBGp-73M
+
+Lo scopo di questo clone realizzato come consegna per il 2 anno di Web & Interaction dell'Istituto Quasar è di ricreare una fedele imitazione del gioco.
+La grafica è realizzata dal sottoscritto tramite GIMP ed è basata su varie immagini trovate sulla rete.
+Per maggiori informazioni sul gioco leggere la relazione.
+
+Come giocare:
+Pupazzo sinistra: tasti A e Z
+Pupazzo destra: freccia su e freccia giù
+
+ATTENZIONE!!
+IL GIOCO ATTUALMENTE GESTISCE UNA SOLA TORTA CHE PARTE SUBITO ALL'AVVIO DEL GIOCO!!!
+
+Il gioco è in ALPHA!!!!!
+
+Bug Conosciuti:
+- Generare torte secondo il passare del tempo
+
+Todo:
+- Elimina la torta alla consegna definitiva
+- Nuvola al cambio stato della torta
+- Effetto fumo e BSOD in caso di perdita
+- Menù
+- Istruzioni sul gioco
+- Cambiare font punteggio e tempo
+- Musica ed effetti sonori
