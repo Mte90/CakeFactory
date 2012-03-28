@@ -62,7 +62,7 @@
 			iter += 1;
 			Interval = setInterval(function() {
 				//Verifico se alla fine del rullo e in caso fermo e aspetto se far cadere
-					if (__man_d.posizione != 0 && iter == 2 && rullo == 1 || iter == 9 && rullo == 1 || rullo > 1 && iter == 8) {
+					if ((__man_d.posizione != 0 && __man_d.checkSposta == false )&& iter == 2 && rullo == 1) || iter == 9 && rullo == 1 || rullo > 1 && iter == 8) {
 						if (Interval2 == null) {
 							Interval2 = setTimeout(function() {
 									cascaTorta(iter);
@@ -126,7 +126,10 @@
 		//Stato torta
 		public function statoTorta(iter) {
 			if (iter == 6 && rullo == 1 || iter == 5 && rullo != 1) {
-				
+				var puff:nuvola= new nuvola();
+				_stage.addChild(puff);
+				puff.x = cake.x+verso_n;
+				puff.y = cake.y;
 			}
 			stato += 1;
 			cake.gotoAndStop(stato);
@@ -244,10 +247,17 @@
 			__man_d = man_d_;
 		}
 		
-		//Elimino la torta
+		//Fine della torta
 		public function fineTorta() {
 			punteggio.text = String(int(punteggio.text) + 1);
 			stopFermo();
+			setTimeout(function() {
+				var puff:nuvola= new nuvola();
+				_stage.addChild(puff);
+				puff.x = cake.x;
+				puff.y = cake.y;
+				_stage.removeChild(cake);
+				}, 500);
 		}
 		
 		//Casca la torta
@@ -307,7 +317,7 @@
 		
 		//Riposiziona
 		public function riposiziona() {
-			if (casca == true && cake.rotation != 180) {
+			if (casca == true) {
 				clearTimeout(Interval2);
 				clearTimeout(Interval_m1);
 				clearTimeout(Interval_m2);

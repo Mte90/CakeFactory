@@ -18,13 +18,11 @@ IL GIOCO ATTUALMENTE GESTISCE UNA SOLA TORTA CHE PARTE SUBITO ALL'AVVIO DEL GIOC
 Il gioco è in ALPHA!!!!!
 
 Bug Conosciuti:
-- Generare torte secondo il passare del tempo
+- Generare torte secondo il passare del tempo da sistemare
+- se non si fà in tempo casca e come la prendi casca
 
 Todo:
-- Elimina la torta alla consegna definitiva
-- Nuvola al cambio stato della torta
 - Effetto fumo e BSOD in caso di perdita
 - Menù
 - Istruzioni sul gioco
-- Cambiare font punteggio e tempo
 - Musica ed effetti sonori
