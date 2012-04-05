@@ -13,13 +13,13 @@ Pupazzo sinistra: tasti A e Z
 Pupazzo destra: freccia su e freccia giù
 
 ATTENZIONE!!
-IL GIOCO ATTUALMENTE GESTISCE UNA SOLA TORTA CHE PARTE SUBITO ALL'AVVIO DEL GIOCO!!!
+IL GIOCO ATTUALMENTE GENERA MOLTE TORTE NON RI RIESCE A GESTIRLE MA NON SI PERDE
 
 Il gioco è in ALPHA!!!!!
 
 Bug Conosciuti:
 - Generare torte secondo il passare del tempo da sistemare
-- se non si fà in tempo casca e come la prendi casca
+- se non si fà in tempo casca e come la prendi continua a cascare
 
 Todo:
 - Effetto fumo e BSOD in caso di perdita
