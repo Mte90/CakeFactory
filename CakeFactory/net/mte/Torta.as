@@ -8,6 +8,8 @@
 	import flash.utils.clearInterval;
 	import flash.utils.setTimeout;
 	import flash.utils.clearTimeout;
+	import flash.utils.Timer;
+	import flash.events.TimerEvent;
 	
 	public class Torta extends MovieClip {
 		
@@ -22,10 +24,6 @@
 		private var Interval, Interval2, Interval_m1, Interval_m2, Interval_m3;
 		//Stato torta
 		private var stato:Number;
-		//X torta
-		private var x_pos:Number;
-		//Y torta
-		private var y_pos:Number;
 		//Pupazzo Sinistra
 		private var __man_s:MovieClip;
 		//Pupazzo Destra
@@ -39,6 +37,8 @@
 		//Alzamento in corso
 		private var checkalza = false;
 		private var rullo = 1;
+		//spostatorta timer
+		var Timert:Timer = new Timer(100);
 		
 		//Init
 		public function Torta(object, punti, stage, punto1, punto2, punto3) {
@@ -52,17 +52,34 @@
 			x_(758);
 			y_(506);
 			stato = 1;
-			setTimeout(function() {
+			polvere(cake.x, cake.y);
+			movimentoTorta();
+			setInterval(function() {
 					spostaTorta();
 				}, 100);
+			
+			/*Timert.addEventListener(TimerEvent.TIMER, movimentoTorta);
+			Timert.start();*/
 		}
 		
 		//Animazione torta
-		public function spostaTorta() {
+		public function movimentoTorta() {
 			iter += 1;
 			Interval = setInterval(function() {
 				//Verifico se alla fine del rullo e in caso fermo e aspetto se far cadere
-					if ((__man_d.posizione != 0 && __man_d.checkSposta == false )&& iter == 2 && rullo == 1) || iter == 9 && rullo == 1 || rullo > 1 && iter == 8) {
+					if (iter == 9 && rullo == 1 || rullo > 1 && iter == 8) {
+						if (Interval2 == null) {
+							Interval2 = setTimeout(function() {
+									cascaTorta(iter);
+								}, 300);
+						}
+					} else if (__man_d.posizione != 0 && iter == 2 && rullo == 1) {
+						if (Interval2 == null) {
+							Interval2 = setTimeout(function() {
+									cascaTorta(iter);
+								}, 300);
+						}
+					} else if (__man_d.posizione == 0 && __man_d.checkSposta == true && iter == 2 && rullo == 1) {
 						if (Interval2 == null) {
 							Interval2 = setTimeout(function() {
 									cascaTorta(iter);
@@ -79,57 +96,58 @@
 							x_(verso_n);
 						}
 					}
-					if (__man_s.checkScala() == false && __man_s.checkSposta() == false) {
-						//Sposta secondo rullo
-						if (__man_s.posizione == 0 && iter == 9 && rullo == 1) {
-							riposiziona();
-							iter = 1;
-							__man_s.spostaTorta(1, 2);
-							alzaTorta();
-						} //Sposta quarto rullo
-						else if (__man_s.posizione == 1 && iter == 8 && rullo == 3) {
-							riposiziona();
-							iter = 1;
-							__man_s.spostaTorta(1, 2);
-							alzaTorta();
-						} //Posa finita
-						else if (__man_s.posizione == 2 && iter == 8 && rullo == 5) {
-							riposiziona();
-							iter = 1;
-							__man_s.spostaTorta(2, 2);
-							alzaTorta();
-						}
-					}
-					if (__man_d.checkScala() == false && __man_d.checkSposta() == false) {
-						//Mette su rullo
-						if (__man_d.posizione == 0 && iter == 2 && rullo == 1) {
-							riposiziona();
-							__man_d.spostaTorta(1, 1);
-							alzaTorta();
-						} //Sposta terzo rullo
-						else if (__man_d.posizione == 1 && iter == 8 && rullo == 2) {
-							riposiziona();
-							iter = 1;
-							__man_d.spostaTorta(2, 1);
-							alzaTorta();
-						} //Sposta quinto rullo
-						else if (__man_d.posizione == 2 && iter == 8 && rullo == 4) {
-							riposiziona();
-							iter = 1;
-							__man_d.spostaTorta(2, 1);
-							alzaTorta();
-						}
-					}
-				}, 500);
+				}, 800);
+		}
+		
+		//Spostamento torta sui rulli
+		public function spostaTorta() {
+			if (__man_s.checkScala() == false && __man_s.checkSposta() == false) {
+				//Sposta secondo rullo
+				if (__man_s.posizione == 0 && iter == 9 && rullo == 1) {
+					riposiziona();
+					iter = 1;
+					__man_s.spostaTorta(1, 2);
+					alzaTorta();
+				} //Sposta quarto rullo
+				else if (__man_s.posizione == 1 && iter == 8 && rullo == 3) {
+					riposiziona();
+					iter = 1;
+					__man_s.spostaTorta(1, 2);
+					alzaTorta();
+				} //Posa finita
+				else if (__man_s.posizione == 2 && iter == 8 && rullo == 5) {
+					riposiziona();
+					iter = 1;
+					__man_s.spostaTorta(2, 2);
+					alzaTorta();
+				}
+			}
+			if (__man_d.checkScala() == false && __man_d.checkSposta() == false) {
+				//Mette su rullo
+				if (__man_d.posizione == 0 && iter == 2 && rullo == 1) {
+					riposiziona();
+					__man_d.spostaTorta(1, 1);
+					alzaTorta();
+				} //Sposta terzo rullo
+				else if (__man_d.posizione == 1 && iter == 8 && rullo == 2) {
+					riposiziona();
+					iter = 1;
+					__man_d.spostaTorta(2, 1);
+					alzaTorta();
+				} //Sposta quinto rullo
+				else if (__man_d.posizione == 2 && iter == 8 && rullo == 4) {
+					riposiziona();
+					iter = 1;
+					__man_d.spostaTorta(2, 1);
+					alzaTorta();
+				}
+			}
 		}
 		
 		//Stato torta
 		public function statoTorta(iter) {
 			if (iter == 6 && rullo == 1 || iter == 5 && rullo != 1) {
-				var puff:nuvola= new nuvola();
-				_stage.addChild(puff);
-				puff.x = cake.x+verso_n;
-				puff.y = cake.y;
+				polvere(cake.x - (-verso_n), cake.y);
 			}
 			stato += 1;
 			cake.gotoAndStop(stato);
@@ -137,11 +155,13 @@
 		
 		//Alza Torta
 		public function alzaTorta() {
+			var xprima:Number = cake.x;
 			if (xcasca != 0) {
 				cake.x = xcasca;
 				cake.y = ycasca;
 				xcasca = 0;
 			}
+			
 			if (stato == 1) {
 				setTimeout(function() {
 						x_(verso_n / 2);
@@ -184,6 +204,7 @@
 			}
 			if (stato > 1 && stato != 6) {
 				rullo += 1;
+				//Timert.stop();
 				setTimeout(function() {
 						y_(-10);
 					}, 500);
@@ -192,9 +213,10 @@
 					}, 600);
 				setTimeout(function() {
 						y_(-24);
-						x_(-verso_n / 2);
+						cake.x = xprima;
 						verso_n *= -1;
 						checkalza = false;
+						//Timert.start();
 					}, 700);
 			} else if (stato == 6) {
 				stopFermo();
@@ -214,28 +236,18 @@
 		}
 		
 		//X torta
-		public function x_(valore:Number = -1):Number {
-			if (valore == -1) {
-				return x_pos;
-			} else {
-				x_pos = valore;
-				cake.x += x_pos;
-				return x_pos;
-			}
+		public function x_(valore:Number) {
+			cake.x += valore;
+			return valore;
 		}
 		
 		//Y torta
-		public function y_(valore:Number = -1):Number {
-			if (valore == -1) {
-				return y_pos;
-			} else {
-				y_pos = valore;
-				cake.y += y_pos;
-				return y_pos;
-			}
+		public function y_(valore:Number) {
+			cake.y += valore;
+			return valore;
 		}
 		
-		//Fermo l'animazione fermo
+		//Fermo l'animazione
 		public function stopFermo() {
 			iter = 0;
 			clearInterval(Interval);
@@ -252,11 +264,8 @@
 			punteggio.text = String(int(punteggio.text) + 1);
 			stopFermo();
 			setTimeout(function() {
-				var puff:nuvola= new nuvola();
-				_stage.addChild(puff);
-				puff.x = cake.x;
-				puff.y = cake.y;
-				_stage.removeChild(cake);
+					polvere(cake.x, cake.y);
+					_stage.removeChild(cake);
 				}, 500);
 		}
 		
@@ -319,10 +328,13 @@
 		public function riposiziona() {
 			if (casca == true) {
 				clearTimeout(Interval2);
-				clearTimeout(Interval_m1);
-				clearTimeout(Interval_m2);
-				clearTimeout(Interval_m3);
 				Interval2 = null;
+				clearTimeout(Interval_m1);
+				Interval_m1 = null;
+				clearTimeout(Interval_m2);
+				Interval_m2 = null;
+				clearTimeout(Interval_m3);
+				Interval_m3 = null;
 				casca = false;
 				cake.rotation = 0;
 				cake.x = xcasca;
@@ -354,6 +366,14 @@
 			} else {
 				trace("perso");
 			}
+		}
+		
+		//Nuvola
+		public function polvere(x, y) {
+			var puff:nuvola = new nuvola();
+			_stage.addChild(puff);
+			puff.x = x;
+			puff.y = y;
 		}
 	}
 }
