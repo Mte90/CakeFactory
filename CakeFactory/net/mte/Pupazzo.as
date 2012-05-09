@@ -33,11 +33,6 @@
 				var npoggio:Number = -1;
 				man.gotoAndStop(1);
 				var iter = 0;
-				if (verso == true) {
-					posizione += 1;
-				} else {
-					posizione -= 1;
-				}
 				Interval = setInterval(function() {
 						if (verso == true) {
 							man.y -= 14;
@@ -48,7 +43,12 @@
 						man.gotoAndStop(npoggio + man.currentFrame);
 						iter++;
 						if (iter == 8) {
-							fermo();
+							if (verso == true) {
+								posizione += 1;
+							} else {
+								posizione -= 1;
+							}
+							fermo();	
 						}
 					}, 80);
 			}
@@ -75,6 +75,7 @@
 		//Fermo le animazioni
 		public function stopFermo() {
 			clearInterval(Interval);
+			Interval = null;
 		}
 		
 		//Sposta torta

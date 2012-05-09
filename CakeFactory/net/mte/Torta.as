@@ -10,6 +10,9 @@
 	import flash.utils.clearTimeout;
 	import flash.utils.Timer;
 	import flash.events.TimerEvent;
+	import flash.media.Sound;
+	import flash.media.SoundChannel;
+	import flash.net.URLRequest;
 	
 	public class Torta extends MovieClip {
 		
@@ -21,7 +24,7 @@
 		private var punteggio, tortecampo_:TextField;
 		private var punto_1, punto_2, punto_3:MovieClip;
 		//Intervallo in uso
-		private var Interval, Interval2, Interval_m1, Interval_m2, Interval_m3;
+		private var Interval, Interval2, Interval_m1, Interval_m2, Interval_m3 = null;
 		//Stato torta
 		private var stato:Number;
 		//Pupazzo Sinistra
@@ -29,11 +32,14 @@
 		//Pupazzo Destra
 		private var __man_d:MovieClip;
 		//Spostamento Torta
-		private var iter = 0;
+		private var iter = 1;
 		private var verso_n = -60;
+		//per il riposizionamento alla caduta
 		private var casca = false;
 		private var xcasca = 0;
 		private var ycasca = 0;
+		//se la torta è sul rullo è true
+		private var partita = false;
 		//Alzamento in corso
 		private var checkalza = false;
 		private var rullo = 1;
@@ -62,36 +68,28 @@
 		
 		//Animazione torta
 		public function movimentoTorta() {
-			iter += 1;
 			Timert.addEventListener(TimerEvent.TIMER, function() {
 				//Verifico se alla fine del rullo e in caso fermo e aspetto se far cadere
-					if (iter == 9 && rullo == 1 || rullo > 1 && iter == 7) {
-						if (Interval2 == null) {
-							Interval2 = setTimeout(function() {
-									cascaTorta(iter);
-								}, 300);
-						}
-					} else if (__man_d.posizione != 0 && iter == 2 && rullo == 1) {
-						if (Interval2 == null) {
-							Interval2 = setTimeout(function() {
-									cascaTorta(iter);
-								}, 300);
-						}
-					} else if (__man_d.posizione == 0 && __man_d.checkSposta == true && iter == 2 && rullo == 1) {
-						if (Interval2 == null) {
-							Interval2 = setTimeout(function() {
-									cascaTorta(iter);
-								}, 300);
-						}
+					if ((iter == 10 && rullo == 1 || rullo > 1 && iter == 7) && Interval2 == null) {
+						Interval2 = setTimeout(function() {
+								cascaTorta(iter);
+							}, 300);
 					}
 					//Se non è alla fine sposta la torta
-					if (casca == false && Interval2 == null) {
-						iter++;
-						if (iter == 6 && rullo == 1 || iter == 4 && rullo != 1) {
+					if (casca == false && Interval2 == null && (rullo == 1 && iter < 10 || rullo != 1 && iter < 7)) {
+						if (iter == 6 && rullo == 1 || iter == 3 && rullo != 1) {
 							statoTorta(iter);
 							x_(verso_n);
+							iter++;
+						} else if (iter == 2 && rullo == 1 && __man_d.posizione != 0 && Interval2 == null) {
+							//Appena uscita nessuno prende faccio cadere
+								Interval2 = setTimeout(function() {
+										cascaTorta(iter);
+									}, 300);
 						} else if (checkalza == false) {
+							//Se non si sta alzando muovi la torta
 							x_(verso_n);
+							iter++;
 						}
 					}
 				});
@@ -100,10 +98,10 @@
 		
 		//Spostamento torta sui rulli
 		public function spostaTorta() {
-			if (xcasca == 0 || (cake.rotation!=160 || cake.rotation==205) && casca == true) {
+			if (casca == false) {
 				if (__man_s.checkScala() == false && __man_s.checkSposta() == false) {
 					//Sposta secondo rullo
-					if (__man_s.posizione == 0 && iter == 9 && rullo == 1) {
+					if (__man_s.posizione == 0 && iter == 10 && rullo == 1) {
 						riposiziona();
 						iter = 1;
 						__man_s.spostaTorta(1, 2);
@@ -124,10 +122,11 @@
 				}
 				if (__man_d.checkScala() == false && __man_d.checkSposta() == false) {
 					//Mette su rullo
-					if (__man_d.posizione == 0 && iter == 2 && rullo == 1) {
+					if (__man_d.posizione == 0 && iter == 2 && rullo == 1 && partita == false) {
+						iter++;
 						riposiziona();
-						__man_d.spostaTorta(1, 1);
 						alzaTorta();
+						__man_d.spostaTorta(1, 1);
 					} //Sposta terzo rullo
 					else if (__man_d.posizione == 1 && iter == 7 && rullo == 2) {
 						riposiziona();
@@ -147,7 +146,13 @@
 		
 		//Stato torta
 		public function statoTorta(iter) {
-			polvere(cake.x - (-verso_n), cake.y);
+			polvere(cake.x - ( -verso_n), cake.y);
+			var urlf:String = "./audio/up.mp3";
+			var songf:SoundChannel;
+			var requestf:URLRequest = new URLRequest(urlf);
+			var soundFactoryf:Sound = new Sound();
+			soundFactoryf.load(requestf);
+			songf = soundFactoryf.play();
 			stato += 1;
 			cake.gotoAndStop(stato);
 		}
@@ -155,13 +160,15 @@
 		//Alza Torta
 		public function alzaTorta() {
 			var xprima:Number = cake.x;
+			//Prendi la posizione della torta prima che l'alzo
 			if (xcasca != 0) {
 				cake.x = xcasca;
 				cake.y = ycasca;
 				xcasca = 0;
 			}
-			
+			//Alzo la torta a seconda della posizione
 			if (stato == 1) {
+				partita = true;
 				setTimeout(function() {
 						x_(verso_n / 2);
 						y_(-5);
@@ -264,6 +271,12 @@
 			stopFermo();
 			clearInterval(Interval);
 			Interval = null;
+			var urlf:String = "./audio/point.mp3";
+			var songf:SoundChannel;
+			var requestf:URLRequest = new URLRequest(urlf);
+			var soundFactoryf:Sound = new Sound();
+			soundFactoryf.load(requestf);
+			songf = soundFactoryf.play();
 			kill();
 			setTimeout(function() {
 					polvere(cake.x, cake.y);
@@ -277,7 +290,6 @@
 		public function cascaTorta(iter) {
 			xcasca = cake.x;
 			ycasca = cake.y;
-			casca = true;
 			//Cade a sinistra
 			if (rullo == 1 || rullo == 3 || rullo == 5) {
 				cake.rotation = 335;
@@ -289,6 +301,7 @@
 				Interval_m1 = setTimeout(function() {
 						cake.rotation = 315;
 						cake.x -= 4;
+						casca = true;
 					}, 300);
 				Interval_m2 = setTimeout(function() {
 						cake.rotation = 285;
@@ -297,7 +310,6 @@
 					}, 500);
 				Interval_m3 = setTimeout(function() {
 						cake.rotation = 205;
-						casca = false;
 						cake.x -= 6;
 						if (iter == 2) {
 							cake.y += 40;
@@ -320,7 +332,6 @@
 					}, 500);
 				Interval_m3 = setTimeout(function() {
 						cake.rotation = 160;
-						casca = false;
 						cake.x += 6;
 						cake.y = 560;
 						stopFermo();
@@ -329,14 +340,16 @@
 			}
 		}
 		
-		//Riposiziona
+		//Riposiziona azzerando i vari intervalli e ripristinando la posizione
 		public function riposiziona() {
-			if (casca == true) {
-				kill();
-				casca = false;
-				cake.rotation = 0;
+			kill();
+			cake.rotation = 0;
+			if (xcasca != 0) {
 				cake.x = xcasca;
 				cake.y = ycasca;
+			}
+			if (casca == true) {
+				casca = false;
 				ycasca = 0;
 				xcasca = 0;
 			}
@@ -356,9 +369,16 @@
 		
 		//Elimina torta
 		public function eliminaTorta() {
+			var urlf:String = "./audio/fall.mp3";
+			var songf:SoundChannel;
+			var requestf:URLRequest = new URLRequest(urlf);
+			var soundFactoryf:Sound = new Sound();
+			soundFactoryf.load(requestf);
+			songf = soundFactoryf.play();
 			clearInterval(Interval);
 			Interval = null;
 			kill();
+			
 			setTimeout(function() {
 					_stage.removeChild(cake);
 					tortecampo_.text = String(int(tortecampo_.text) - 1);
@@ -371,6 +391,7 @@
 			color.contrast = -20;
 			color.hue = 0;
 			color.saturation = 0;
+			//Oscura il conteggio vite
 			if (punto_1.alpha == 1) {
 				punto_1.alpha = 0.99;
 				punto_1.filters = [new ColorMatrixFilter(color.CalculateFinalFlatArray())];
@@ -390,7 +411,7 @@
 			var puff:nuvola = new nuvola();
 			_stage.addChild(puff);
 			puff.x = x;
-			puff.y = y;
+			puff.y = y-4;
 		}
 	}
 }
