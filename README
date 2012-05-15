@@ -6,7 +6,7 @@ Lo scopo di questo clone, realizzato come consegna per il 2 anno di Web & Intera
 La grafica è realizzata dal sottoscritto tramite GIMP ed è basata su varie immagini trovate sulla rete.
 Per maggiori informazioni sul gioco leggere la relazione.
 
-Per provarlo scaricare il file CakeFactory/CakeFactory.swf
+Per provarlo http://cakefactory.mte90.net
 
 Come giocare:
 Pupazzo sinistra: tasti A e Z
@@ -15,9 +15,4 @@ Pupazzo destra: freccia su e freccia giù
 Il gioco è in ALPHA!!!!!
 
 Bug Conosciuti:
-- Generare torte secondo il passare del tempo da sistemare
-
-Todo:
-- Menù
-- Istruzioni sul gioco
-- Musica ed effetti sonori
+- Dopo 7 punti il gioco diventa ingiocabile
