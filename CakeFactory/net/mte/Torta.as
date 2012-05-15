@@ -24,7 +24,7 @@
 		private var punteggio, tortecampo_:TextField;
 		private var punto_1, punto_2, punto_3:MovieClip;
 		//Intervallo in uso
-		private var Interval, Interval2, Interval_m1, Interval_m2, Interval_m3 = null;
+		private var Interval, Interval2,Interval3, Interval_m1, Interval_m2, Interval_m3 = null;
 		//Stato torta
 		private var stato:Number;
 		//Pupazzo Sinistra
@@ -68,6 +68,14 @@
 		
 		//Animazione torta
 		public function movimentoTorta() {
+			Interval3 = setInterval(function() {
+				if (iter == 2 && rullo == 1 && __man_d.posizione != 0 && Interval2 == null) {
+							//Appena uscita nessuno prende faccio cadere
+								Interval2 = setTimeout(function() {
+										cascaTorta(iter);
+									}, 300);
+				}
+			},100);
 			Timert.addEventListener(TimerEvent.TIMER, function() {
 				//Verifico se alla fine del rullo e in caso fermo e aspetto se far cadere
 					if ((iter == 10 && rullo == 1 || rullo > 1 && iter == 7) && Interval2 == null) {
@@ -81,11 +89,6 @@
 							statoTorta(iter);
 							x_(verso_n);
 							iter++;
-						} else if (iter == 2 && rullo == 1 && __man_d.posizione != 0 && Interval2 == null) {
-							//Appena uscita nessuno prende faccio cadere
-								Interval2 = setTimeout(function() {
-										cascaTorta(iter);
-									}, 300);
 						} else if (checkalza == false) {
 							//Se non si sta alzando muovi la torta
 							x_(verso_n);
